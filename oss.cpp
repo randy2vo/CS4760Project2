@@ -4,8 +4,34 @@
 #include <sys/wait.h>   // waitpid
 #include <cstdlib>      // exit, stoi
 #include <cerrno>
+#include <signal.h>
+
 
 using namespace std;
+
+struct SimClock{
+	unsigned int seconds;
+	unsigned int nanoseconds;
+};
+
+struct PCB {
+	int occupied;
+	pid_t pid;
+	unsigned int startSeconds;
+	unsigned int startNano;
+	unsigned int endingTimeSeconds;
+	unsigned int endingTimeNano;
+};
+
+static int g_shmid = -1;
+
+static SimClock* g_clk = nullptr;
+
+static PCB* g_table_ptr = nullptr;
+
+static vector<pid_t> g_children;
+
+
 
 static void printHelp(const char* prog) {
     cout << "Usage: " << prog << " [-h] [-n proc] [-s simul] [-t iter]\n"
@@ -57,8 +83,49 @@ static pid_t launchChild(int iter) {
     return pid; // parent gets child's PID
 }
 
+
+void signal_handler(int sig){
+	cerr << "\nOSS: caught signal " << sig << ". Terminating children and cleaning up... \n";
+
+	if (g_table_ptr) {
+        for (int i = 0; i < MAX_PCB; i++) {
+            if (g_table_ptr[i].occupied && g_table_ptr[i].pid > 0) {
+                kill(g_table_ptr[i].pid, SIGTERM);
+            }
+        }
+    } else {
+        // fallback: kill anything in vector list
+        for (pid_t p : g_children) {
+            if (p > 0) kill(p, SIGTERM);
+        }
+    }
+
+	
+	int status = 0;
+    while (waitpid(-1, &status, WNOHANG) > 0) {}
+
+    // Detach + remove shared memory (ONLY oss should remove)
+    if (g_clk && g_clk != (void*)-1) {
+        shmdt(g_clk);
+        g_clk = nullptr;
+    }
+    if (g_shmid != -1) {
+        shmctl(g_shmid, IPC_RMID, nullptr);
+        g_shmid = -1;
+    }
+
+    _exit(1);
+}
+
+
 int main(int argc, char* argv[]) {
-    // Defaults
+    
+signal(SIGINT, signal_handler);
+signal(SIGALRM, signal_handler);
+alarm(60);
+	
+
+	// Defaults
     int n = 1;  // total children
     int s = 1;  // simultaneous limit
     int t = 1;  // iterations for user
