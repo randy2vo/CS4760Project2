@@ -12,6 +12,11 @@ struct SimClock {
     unsigned int nanoseconds;
 };
 
+
+/*total seconds = base seconds + added seconds + whatever seconds within nanoseconds ex. if ns = 1,500,000,000 then 
+  1,500,000,000 / 1,000,000,000 = 1 extra second within nanoseconds.
+  */
+
 static void addTime(unsigned int baseS,  unsigned int baseNS,
                     unsigned int addS,   unsigned int addNS,
                     unsigned int &outS,  unsigned int &outNS) {
