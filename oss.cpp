@@ -86,8 +86,8 @@ static void printHelp(const char* prog) {
     cout << "Usage: " << prog
          << " [-h] [-n proc] [-s simul] [-t timeLimitForChildren] [-i intervalToLaunch]\n"
          << "  -h       Show this help message and exit\n"
-         << "  -n proc  Total number of children to launch\n"
-         << "  -s simul Max simultaneous children\n"
+         << "  -n proc  Total number of children to launch (max 80)\n"
+         << "  -s simul Max simultaneous children (max 15)\n"
          << "  -t secs  Simulated time limit passed to each worker (float, e.g. 2.5)\n"
          << "  -i secs  Minimum simulated interval between launches (float, e.g. 0.1)\n\n"
          << "Example:\n"
@@ -142,11 +142,11 @@ int main(int argc, char* argv[]) {
                 return 0;
             case 'n':
                 n = atoi(optarg);
-                if (n <= 0) { cerr << "Error: -n must be positive\n"; return 1; }
+                if (n <= 0 || n > 80) { cerr << "Error: -n must be between 1 and 80\n"; return 1; }
                 break;
             case 's':
                 s = atoi(optarg);
-                if (s <= 0) { cerr << "Error: -s must be positive\n"; return 1; }
+                if (s <= 0 || s > 15) { cerr << "Error: -s must be between 1 and 15\n"; return 1; }
                 break;
             case 't':
                 t = atof(optarg);
