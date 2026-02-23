@@ -2,14 +2,78 @@ Name: Randy Vo
 Date: 02-11-2026
 Environment: opsys (Linux), vim
 
+-----------------------------------------------------------------------------------------------------------------------------
+
+Description:
+
+This project simulates an operating system scheduler using two executables: oss and worker. 
+
+oss maintains a simulated system clock in shared memory consisting of two unsigned integers (seconds and nanoseconds).It also manages a process table of up to 20 process control blocks (PCBs), launching worker processes bases on command line parameters. The clock is incremented each iteration of the main loop, and oss uses non-blocking waitpid calls to detect when children
+terminate without halting execution.
+
+Worker attaches to the shared memory clocks and computs a termination time based on the arguments passed to it while busy-waits until the simulated clock reaches that time. It outputs a message each seconds and a final message before termination. 
+
+------------------------------------------------------------------------------------------------------------------------------ 
+
+
 How to compile:
-make
+
+Type 'make'
+
+This will compile both oss and worker exec. 
+
+------------------------------------------------------------------------------------------------------------------------------
 
 Example of how to run:
 
 
+./oss [-h] [-n proc] [-s simul] [-t timeLimitForChildren] [-i intervalToLaunch]
 
-Generative AI used:
+  -h       Show help message and exit
+  -n proc  Total number of worker processes to launch (max 80)
+  -s simul Maximum number of workers allowed to run simultaneously (max 15)
+  -t secs  Simulated time limit passed to each worker (float, e.g. 2.5)
+  -i secs  Minimum simulated interval between launches (float, e.g. 0.1)
+
+Example:
+  ./oss -n 5 -s 3 -t 4 -i 0.5
+
+This launches 5 workers total, no more than 3 at a time, each running for
+up to 4 simulated seconds, with at least 0.5 simulated seconds between
+each launch.
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Problems Encountered:
+
+- Nanosecond overflow had to be handled carefully whenever adding time values together. Any nanosecond sum reaching or exceedi	ng 1,000,000,000 needed to carry over into the seconds field.
+
+- Care was taken to use _exit() inside the signal handler rather than exit() to avoid unsafe behavior.
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Version Control:
+
+Used git for version control. Commits were made at least once every other day. To view the commit log:
+
+	git log
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Generative AI used: ChatGPT and claude.ai
+
+Prompts used:
+
+- Walk me through doing this project.
+- Describle this line.
+- Help me understand this.
+
+Summary: Claude was helpful in structuring the overall approach to the project. Chatgpt was helpful in explaining shared memory concept. Re-used Project 1 as the baseline for argument parsing. Understanding each line of the generated code was important to make sure I full comprehen each line rather than just submitting code blindly. 
+
+
+
+
 
 
 
