@@ -13,6 +13,7 @@ terminate without halting execution.
 
 Worker attaches to the shared memory clocks and computs a termination time based on the arguments passed to it while busy-waits until the simulated clock reaches that time. It outputs a message each seconds and a final message before termination. 
 
+Process table will print every 0.5 seconds. 
 ------------------------------------------------------------------------------------------------------------------------------ 
 
 
@@ -78,6 +79,8 @@ Extra:
 If the number of -s is greater than -n then -s will become at most -n.
 
 NO negative integer will be accepted, ONLY POSTIVE.
+
+If running with no arguments (e.g "./oss"), default case would be -n 1 -s 1 -t 1 -i 0.1.
 
 
 
