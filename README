@@ -71,6 +71,13 @@ Prompts used:
 
 Summary: Claude was helpful in structuring the overall approach to the project. Chatgpt was helpful in explaining shared memory concept. Re-used Project 1 as the baseline for argument parsing. Understanding each line of the generated code was important to make sure I full comprehend each line rather than just submitting code blindly. 
 
+--------------------------------------------------------------------------------------------------------------------------------
+
+Extra:
+
+If the number of -s is greater than -n then -s will become at most -n.
+
+NO negative integer will be accepted, ONLY POSTIVE.
 
 
 
