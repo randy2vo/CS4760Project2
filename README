@@ -8,7 +8,7 @@ Description:
 
 This project simulates an operating system scheduler using two executables: oss and worker. 
 
-oss maintains a simulated system clock in shared memory consisting of two unsigned integers (seconds and nanoseconds).It also manages a process table of up to 20 process control blocks (PCBs), launching worker processes bases on command line parameters. The clock is incremented each iteration of the main loop, and oss uses non-blocking waitpid calls to detect when children
+oss maintains a simulated system clock in shared memory consisting of two unsigned integers (seconds and nanoseconds).It also manages a process table of up to20 process control blocks (PCBs), launching worker processes bases on command line parameters. The clock is incremented each iteration of the main loop, and oss uses non-blocking waitpid calls to detect when children
 terminate without halting execution.
 
 Worker attaches to the shared memory clocks and computs a termination time based on the arguments passed to it while busy-waits until the simulated clock reaches that time. It outputs a message each seconds and a final message before termination. 
@@ -47,7 +47,7 @@ each launch.
 
 Problems Encountered:
 
-- Nanosecond overflow had to be handled carefully whenever adding time values together. Any nanosecond sum reaching or exceedi	ng 1,000,000,000 needed to carry over into the seconds field.
+- Nanosecond overflow had to be handled carefully whenever adding time values together. Any nanosecond sum reaching or exceeding 1,000,000,000 needed to carry over into the seconds field.
 
 - Care was taken to use _exit() inside the signal handler rather than exit() to avoid unsafe behavior.
 
@@ -69,7 +69,7 @@ Prompts used:
 - Describle this line.
 - Help me understand this.
 
-Summary: Claude was helpful in structuring the overall approach to the project. Chatgpt was helpful in explaining shared memory concept. Re-used Project 1 as the baseline for argument parsing. Understanding each line of the generated code was important to make sure I full comprehen each line rather than just submitting code blindly. 
+Summary: Claude was helpful in structuring the overall approach to the project. Chatgpt was helpful in explaining shared memory concept. Re-used Project 1 as the baseline for argument parsing. Understanding each line of the generated code was important to make sure I full comprehend each line rather than just submitting code blindly. 
 
 
 
